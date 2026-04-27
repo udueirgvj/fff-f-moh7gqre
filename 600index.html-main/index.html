@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - تواصل</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .container {
+            max-width: 450px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 2rem 1.5rem;
+        }
+        h2 {
+            text-align: center;
+            color: #1a2b3e;
+            margin-bottom: 1.8rem;
+            font-size: 1.8rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #eef2f7;
+            padding-bottom: 0.5rem;
+        }
+        .tab {
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            color: #8899aa;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+        }
+        .tab.active {
+            color: #2A6B9C;
+            border-bottom-color: #2A6B9C;
+        }
+        .form {
+            display: none;
+        }
+        .form.active {
+            display: block;
+        }
+        .input-group {
+            margin-bottom: 1.2rem;
+        }
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #4b5f73;
+            margin-bottom: 0.3rem;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            font-size: 1rem;
+            border: 1px solid #d9e1ec;
+            border-radius: 12px;
+            background: #f9fcff;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+        .input-group input:focus {
+            border-color: #2A6B9C;
+            box-shadow: 0 0 0 3px rgba(42,107,156,0.1);
+        }
+        .btn {
+            width: 100%;
+            padding: 0.8rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            background: #2A6B9C;
+            color: white;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background: #1f4e7a;
+        }
+        .link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #7f8fa4;
+        }
+        .link a {
+            color: #2A6B9C;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .link a:hover {
+            text-decoration: underline;
+        }
+        .message {
+            padding: 0.7rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>تواصل</h2>
+        
+        <!-- التبويبات -->
+        <div class="tabs">
+            <div class="tab active" id="tabSignup" onclick="switchTab('signup')">إنشاء حساب</div>
+            <div class="tab" id="tabLogin" onclick="switchTab('login')">تسجيل الدخول</div>
+        </div>
+
+        <!-- نموذج إنشاء حساب -->
+        <div class="form active" id="signupForm">
+            <form onsubmit="event.preventDefault(); signup()">
+                <div class="input-group">
+                    <label>الاسم الشخصي</label>
+                    <input type="text" id="fullName" placeholder="أدخل اسمك" required>
+                </div>
+                <div class="input-group">
+                    <label>اسم المستخدم</label>
+                    <input type="text" id="username" placeholder="أدخل اسم المستخدم" required>
+                </div>
+                <div class="input-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="email" placeholder="example@mail.com" required>
+                </div>
+                <div class="input-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="password" placeholder="******" required>
+                </div>
+                <button type="submit" class="btn">إنشاء الحساب</button>
+                <div id="signupMessage" class="message"></div>
+            </form>
+            <div class="link">
+                لديك حساب؟ <a onclick="switchTab('login')">تسجيل الدخول</a>
+            </div>
+        </div>
+
+        <!-- نموذج تسجيل الدخول -->
+        <div class="form" id="loginForm">
+            <form onsubmit="event.preventDefault(); login()">
+                <div class="input-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="loginEmail" placeholder="example@mail.com" required>
+                </div>
+                <div class="input-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="loginPassword" placeholder="******" required>
+                </div>
+                <button type="submit" class="btn">تسجيل الدخول</button>
+                <div id="loginMessage" class="message"></div>
+            </form>
+            <div class="link">
+                ليس لديك حساب؟ <a onclick="switchTab('signup')">إنشاء حساب</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // استيراد Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            getDatabase, 
+            ref, 
+            set, 
+            query, 
+            orderByChild, 
+            equalTo, 
+            get
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // 🔥 استبدل هذا الكائن بمفاتيحك من Firebase Console 🔥
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRCtfuYrEdnuKUsWu_79NC6G_xGLznBJc",
+            authDomain: "tttrt-b8c5a.firebaseapp.com",
+            databaseURL: "https://tttrt-b8c5a-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "tttrt-b8c5a",
+            storageBucket: "tttrt-b8c5a.firebasestorage.app",
+            messagingSenderId: "975123752593",
+            appId: "1:975123752593:web:e591e930af3a3e29568130"
+        };
+
+        // تهيئة Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        // دالة عرض الرسائل
+        window.showMessage = function(elementId, message, isSuccess) {
+            const msgDiv = document.getElementById(elementId);
+            msgDiv.textContent = message;
+            msgDiv.className = isSuccess ? 'message success' : 'message error';
+        };
+
+        // التحقق من اسم المستخدم الفريد
+        async function isUsernameUnique(username) {
+            const usersRef = ref(database, 'users');
+            const usernameQuery = query(usersRef, orderByChild('username'), equalTo(username));
+            const snapshot = await get(usernameQuery);
+            return !snapshot.exists();
+        }
+
+        // دالة إنشاء الحساب
+        window.signup = async function() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!fullName || !username || !email || !password) {
+                showMessage('signupMessage', 'جميع الحقول مطلوبة', false);
+                return;
+            }
+            if (password.length < 6) {
+                showMessage('signupMessage', 'كلمة المرور يجب أن تكون 6 أحرف على الأقل', false);
+                return;
+            }
+
+            try {
+                // تحقق من اسم المستخدم
+                const unique = await isUsernameUnique(username);
+                if (!unique) {
+                    showMessage('signupMessage', 'اسم المستخدم موجود بالفعل', false);
+                    return;
+                }
+
+                // إنشاء المستخدم
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // حفظ البيانات
+                await set(ref(database, 'users/' + user.uid), {
+                    fullName: fullName,
+                    username: username,
+                    email: email,
+                    createdAt: new Date().toISOString()
+                });
+
+                showMessage('signupMessage', 'تم إنشاء الحساب! جارٍ التحويل...', true);
+                
+                // التوجيه إلى صفحة التطبيق بعد ثانية
+                setTimeout(() => {
+                    window.location.href = 'app.html';
+                }, 1500);
+            } catch (error) {
+                console.error(error);
+                if (error.code === 'auth/email-already-in-use') {
+                    showMessage('signupMessage', 'البريد الإلكتروني مستخدم بالفعل', false);
+                } else {
+                    showMessage('signupMessage', 'خطأ: ' + error.message, false);
+                }
+            }
+        };
+
+        // دالة تسجيل الدخول
+        window.login = async function() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showMessage('loginMessage', 'البريد وكلمة المرور مطلوبان', false);
+                return;
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showMessage('loginMessage', 'تم تسجيل الدخول! جارٍ التحويل...', true);
+                
+                setTimeout(() => {
+                    window.location.href = 'app.html';
+                }, 1500);
+            } catch (error) {
+                console.error(error);
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    showMessage('loginMessage', 'البريد أو كلمة المرور غير صحيحة', false);
+                } else {
+                    showMessage('loginMessage', 'خطأ: ' + error.message, false);
+                }
+            }
+        };
+    </script>
+
+    <!-- دالة التبديل بين التبويبات -->
+    <script>
+        function switchTab(tab) {
+            if (tab === 'signup') {
+                document.getElementById('tabSignup').classList.add('active');
+                document.getElementById('tabLogin').classList.remove('active');
+                document.getElementById('signupForm').classList.add('active');
+                document.getElementById('loginForm').classList.remove('active');
+            } else {
+                document.getElementById('tabLogin').classList.add('active');
+                document.getElementById('tabSignup').classList.remove('active');
+                document.getElementById('loginForm').classList.add('active');
+                document.getElementById('signupForm').classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
