@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تواصل - إنشاء قناة أو مجموعة</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: #2A6B9C;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            flex: 1;
+        }
+        .container {
+            flex: 1;
+            padding: 2rem;
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        h2 {
+            margin-bottom: 1.5rem;
+            color: #1a2b3e;
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 1.2rem;
+        }
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #4b5f73;
+            margin-bottom: 0.3rem;
+        }
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #d9e1ec;
+            border-radius: 12px;
+            background: #f9fcff;
+            font-size: 1rem;
+            outline: none;
+        }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            border-color: #2A6B9C;
+            box-shadow: 0 0 0 3px rgba(42,107,156,0.1);
+        }
+        .input-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: normal;
+            color: #1a2b3e;
+        }
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 30px;
+            background: #2A6B9C;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 1rem;
+        }
+        .btn:hover {
+            background: #1f4e7a;
+        }
+        .message {
+            padding: 0.8rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+        }
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        .info-text {
+            color: #7f8fa4;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #8899aa;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-btn" onclick="goBack()">←</button>
+        <h1>إنشاء جديد</h1>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>إنشاء قناة أو مجموعة</h2>
+            <div class="input-group">
+                <label>نوع الإنشاء</label>
+                <select id="type">
+                    <option value="channel">قناة</option>
+                    <option value="group">مجموعة</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>الاسم</label>
+                <input type="text" id="name" placeholder="أدخل الاسم" required>
+            </div>
+            <div class="input-group">
+                <label>اسم المستخدم (username) <span style="color:#dc3545;">*</span></label>
+                <input type="text" id="username" placeholder="مثال: mychannel" required>
+                <div class="info-text">هذا الاسم سيظهر في نتائج البحث ويجب أن يكون فريداً.</div>
+            </div>
+            <div class="input-group">
+                <label>الوصف (اختياري)</label>
+                <textarea id="desc" placeholder="وصف..." rows="3"></textarea>
+            </div>
+            <div class="input-group">
+                <label>صورة (رابط)</label>
+                <input type="text" id="avatar" placeholder="رابط الصورة (اختياري)">
+            </div>
+            <div class="input-group">
+                <label>نوع الوصول</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="privacy" value="public" checked> عامة</label>
+                    <label><input type="radio" name="privacy" value="private"> خاصة</label>
+                </div>
+            </div>
+            <button class="btn" onclick="createChannel()">إنشاء</button>
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, push, set, query, orderByChild, equalTo, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRCtfuYrEdnuKUsWu_79NC6G_xGLznBJc",
+            authDomain: "tttrt-b8c5a.firebaseapp.com",
+            databaseURL: "https://tttrt-b8c5a-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "tttrt-b8c5a",
+            storageBucket: "tttrt-b8c5a.firebasestorage.app",
+            messagingSenderId: "975123752593",
+            appId: "1:975123752593:web:e591e930af3a3e29568130"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        const typeSelect = document.getElementById('type');
+        const nameInput = document.getElementById('name');
+        const usernameInput = document.getElementById('username');
+        const descInput = document.getElementById('desc');
+        const avatarInput = document.getElementById('avatar');
+        const privacyRadios = document.getElementsByName('privacy');
+        const messageDiv = document.getElementById('message');
+
+        let currentUserId = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+            currentUserId = user.uid;
+        });
+
+        function showMessage(msg, isSuccess) {
+            messageDiv.textContent = msg;
+            messageDiv.className = isSuccess ? 'message success' : 'message error';
+        }
+
+        // التحقق من أن اسم المستخدم غير مستخدم مسبقاً (في users أو channels)
+        async function isUsernameUnique(username) {
+            // التحقق في users
+            const usersRef = ref(database, 'users');
+            const userQuery = query(usersRef, orderByChild('username'), equalTo(username));
+            const userSnapshot = await get(userQuery);
+            if (userSnapshot.exists()) return false;
+
+            // التحقق في channels
+            const channelsRef = ref(database, 'channels');
+            const channelQuery = query(channelsRef, orderByChild('username'), equalTo(username));
+            const channelSnapshot = await get(channelQuery);
+            return !channelSnapshot.exists();
+        }
+
+        window.createChannel = async function() {
+            const type = typeSelect.value;
+            const name = nameInput.value.trim();
+            const username = usernameInput.value.trim().toLowerCase(); // نخزنه بأحرف صغيرة لتوحيد البحث
+            const description = descInput.value.trim() || '';
+            const avatar = avatarInput.value.trim() || '';
+            let privacy = 'public';
+            for (const radio of privacyRadios) {
+                if (radio.checked) privacy = radio.value;
+            }
+
+            if (!name) {
+                showMessage('الاسم مطلوب', false);
+                return;
+            }
+            if (!username) {
+                showMessage('اسم المستخدم مطلوب', false);
+                return;
+            }
+            // تحقق بسيط من صيغة username (حروف وأرقام فقط)
+            if (!/^[a-z0-9_]+$/.test(username)) {
+                showMessage('اسم المستخدم يجب أن يحتوي على أحرف إنجليزية صغيرة وأرقام وشرطة سفلية فقط', false);
+                return;
+            }
+
+            try {
+                // التحقق من أن اسم المستخدم فريد
+                const unique = await isUsernameUnique(username);
+                if (!unique) {
+                    showMessage('اسم المستخدم موجود بالفعل، اختر اسماً آخر', false);
+                    return;
+                }
+
+                const channelsRef = ref(database, 'channels');
+                const newChannelRef = push(channelsRef);
+                const channelId = newChannelRef.key;
+
+                // إنشاء رابط دعوة فريد للمجموعات الخاصة
+                let inviteLink = '';
+                if (type === 'group' && privacy === 'private') {
+                    inviteLink = `${window.location.origin}/join/${channelId}_${Date.now()}`;
+                }
+
+                await set(newChannelRef, {
+                    type: type,
+                    name: name,
+                    username: username,          // حفظ اسم المستخدم للبحث
+                    description: description,
+                    avatar: avatar,
+                    privacy: privacy,
+                    createdBy: currentUserId,
+                    createdAt: new Date().toISOString(),
+                    members: [currentUserId],
+                    admins: [currentUserId],
+                    inviteLink: inviteLink,
+                    totalMessages: 0,
+                    settings: {
+                        canSendMessages: type === 'group' ? true : false,
+                        slowMode: false,
+                        joinRequests: privacy === 'private' ? true : false
+                    }
+                });
+
+                showMessage('تم الإنشاء بنجاح! جاري التوجيه...', true);
+                setTimeout(() => {
+                    window.location.href = `channel-view.html?id=${channelId}`;
+                }, 1500);
+            } catch (error) {
+                console.error(error);
+                showMessage('حدث خطأ: ' + error.message, false);
+            }
+        };
+
+        window.goBack = function() {
+            window.location.href = 'app.html';
+        };
+    </script>
+</body>
+</html>
